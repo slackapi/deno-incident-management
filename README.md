@@ -1,6 +1,6 @@
 # Incident Management Sample
 
-Please follow the tutorial for this repo at hhttps://api.slack.com/tutorials/tracks/create-incident.
+Please follow the tutorial for this repo at https://api.slack.com/tutorials/tracks/create-incident.
 
 This sample project shows how to create a function to handle incidents.
 
