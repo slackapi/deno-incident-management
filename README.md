@@ -9,7 +9,7 @@ This sample project shows how to create a function to handle incidents.
 Create a new project using this as repo as a template.
 
 ```bash
-slack create slackapi/future-incident-management
+slack create -t slackapi/future-incident-management
 ```
 
 ## Running it locally
