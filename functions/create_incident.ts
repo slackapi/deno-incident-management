@@ -6,23 +6,29 @@ export const CreateIncident = DefineFunction(
     title: "Create Incident",
     description: "Creates an incident",
     input_parameters: {
-      slug: {
-        type: Schema.types.string,
-        description: "Incident Name / Title",
-      },
-      description: {
-        type: Schema.types.string,
-        description: "Short Description of Incident",
-      },
-      severity: {
-        type: Schema.types.string,
-        description: "Incident Impact / Severity",
+      required: ["slug", "description", "severity"],
+      properties: {
+        slug: {
+          type: Schema.types.string,
+          description: "Incident Name / Title",
+        },
+        description: {
+          type: Schema.types.string,
+          description: "Short Description of Incident",
+        },
+        severity: {
+          type: Schema.types.string,
+          description: "Incident Impact / Severity",
+        },
       },
     },
     output_parameters: {
-      id: {
-        type: Schema.types.string,
-        description: "Incident ID",
+      required: ["id"],
+      properties: {
+        id: {
+          type: Schema.types.string,
+          description: "Incident ID",
+        },
       },
     },
   },

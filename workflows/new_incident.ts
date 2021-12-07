@@ -2,22 +2,25 @@ import { DefineWorkflow, Schema } from "slack-cloud-sdk/mod.ts";
 import { CreateIncident } from "../functions/create_incident.ts";
 
 export const NewIncidentWorkflow = DefineWorkflow("new_incident", {
-    title: "New Incident",
-    description: "Generates a new incident, creates a channel, posts a message to channel",
-    input_parameters: {
-        slug: {
-            type: Schema.types.string,
-            description: "Incident Name / Slug",
-        },
-        description: {
-            type: Schema.types.string,
-            description: "Incident Description",
-        },
-        severity: {
-            type: Schema.types.string,
-            description: "Incident Severity",
-        },
+  title: "New Incident",
+  description: "Generates a new incident, creates a channel, posts a message to channel",
+  input_parameters: {
+    required: ["slug", "description", "severity"],
+    properties: {
+      slug: {
+        type: Schema.types.string,
+        description: "Incident Name / Slug",
+      },
+      description: {
+        type: Schema.types.string,
+        description: "Incident Description",
+      },
+      severity: {
+        type: Schema.types.string,
+        description: "Incident Severity",
+      },
     },
+  },
 });
 
 const step1 = NewIncidentWorkflow.addStep(CreateIncident, {
