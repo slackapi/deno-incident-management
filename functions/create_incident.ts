@@ -26,21 +26,21 @@ export const CreateIncident = DefineFunction(
       required: ["id"],
       properties: {
         id: {
-          type: Schema.types.string,
+          type: Schema.types.number,
           description: "Incident ID",
         },
       },
     },
   },
-  async ({ inputs, env }) => {
+  async ({ inputs }) => {
     console.log(inputs);
     console.log(
       `New incident created: ${inputs.slug} | ${inputs.description} | ${inputs.severity}`,
     );
-    const incident_id = Math.floor(Math.random() * 222222);
+    const incidentId = Math.floor(Math.random() * 222222);
     return await {
       completed: true,
-      outputs: { id: incident_id },
+      outputs: { id: incidentId },
     };
   },
 );
