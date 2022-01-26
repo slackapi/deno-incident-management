@@ -1,6 +1,4 @@
 import { Project } from "slack-cloud-sdk/mod.ts";
-import { CreateIncident } from "./functions/create_incident.ts";
-import { NewIncidentWorkflow } from "./workflows/new_incident.ts";
 import { NewIncidentShortcut } from "./triggers/new_incident_shortcut.ts";
 
 Project({
@@ -15,8 +13,6 @@ Project({
     "chat:write.public",
     "groups:write",
   ],
-  functions: [CreateIncident],
-  workflows: [NewIncidentWorkflow],
   triggers: [NewIncidentShortcut],
   tables: [],
   outgoingDomains: [],
