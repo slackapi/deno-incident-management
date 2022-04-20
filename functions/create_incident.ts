@@ -15,7 +15,7 @@ const CreateIncident: FunctionHandler<any, any> = async (args: any) => {
   console.log(
     `New incident created: ${inputs.slug} | ${inputs.description} | ${inputs.severity}`,
   );
-  const incidentId = Math.floor(Math.random() * 222222);
+  const incidentId = crypto.randomUUID();
 
   // Create a channel first
   const client = SlackAPI(token, { slackApiUrl });
