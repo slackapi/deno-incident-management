@@ -1,46 +1,58 @@
-import { DefineFunction, Schema } from "slack-cloud-sdk/mod.ts";
+import type { FunctionHandler } from "deno-slack-sdk/types.ts";
+import { SlackAPI } from "deno-slack-api/mod.ts";
 
-export const CreateIncident = DefineFunction(
-  "create_incident",
-  {
-    title: "Create Incident",
-    description: "Creates an incident",
-    input_parameters: {
-      required: ["slug", "description", "severity"],
-      properties: {
-        slug: {
-          type: Schema.types.string,
-          description: "Incident Name / Title",
-        },
-        description: {
-          type: Schema.types.string,
-          description: "Short Description of Incident",
-        },
-        severity: {
-          type: Schema.types.string,
-          description: "Incident Impact / Severity",
-        },
-      },
-    },
-    output_parameters: {
-      required: ["id"],
-      properties: {
-        id: {
-          type: Schema.types.number,
-          description: "Incident ID",
-        },
-      },
-    },
-  },
-  async ({ inputs }) => {
-    console.log(inputs);
-    console.log(
-      `New incident created: ${inputs.slug} | ${inputs.description} | ${inputs.severity}`,
-    );
-    const incidentId = Math.floor(Math.random() * 222222);
-    return await {
-      completed: true,
-      outputs: { id: incidentId },
-    };
-  },
-);
+// deno-lint-ignore no-explicit-any
+const CreateIncident: FunctionHandler<any, any> = async (args: any) => {
+  const token: string = args.token;
+// deno-lint-ignore no-explicit-any
+  const inputs: any = args.inputs;
+// deno-lint-ignore no-explicit-any
+  const env: any = args.env;
+  console.log(inputs);
+  // TODO: maybe validate inputs.slug to make sure it conforms to channel naming requirements?
+  // see https://api.slack.com/methods/conversations.create#naming
+  const slackApiUrl = env["SLACK_API_URL"];
+  console.log(
+    `New incident created: ${inputs.slug} | ${inputs.description} | ${inputs.severity}`,
+  );
+  const incidentId = Math.floor(Math.random() * 222222);
+
+  // Create a channel first
+  const client = SlackAPI(token, { slackApiUrl });
+  // deno-lint-ignore no-explicit-any
+  let res: any;
+  console.log('Creating channel...');
+  try {
+    res = await client.apiCall('conversations.create', {
+      name: inputs.slug,
+      is_private: false,
+    });
+  } catch (e) {
+    console.error(e);
+    return { outputs: { completed: false, error: `Error during channel creation: ${e.message}` } };
+  }
+  if (!res || res.ok !== true) {
+    console.error(res);
+    return { outputs: { completed: false, error: `Bad response from channel creation API: ${res}` } };
+  }
+  const channel = res.channel.id;
+
+  // Send a message to the new channel second
+  console.log('Sending message...');
+  try {
+    await client.apiCall('chat.postMessage', {
+      channel,
+      text: `There is an incident: #${incidentId} ${inputs.description}`,
+    });
+  } catch (e) {
+    console.error(e);
+    return { outputs: { completed: false, error: `Error incident channel message posting: ${e.message}` } };
+  }
+  console.log('Incident created!');
+  return await {
+    completed: true,
+    outputs: { id: String(incidentId) },
+  };
+};
+
+export default CreateIncident;
