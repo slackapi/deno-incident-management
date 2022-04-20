@@ -29,11 +29,11 @@ const CreateIncident: FunctionHandler<any, any> = async (args: any) => {
     });
   } catch (e) {
     console.error(e);
-    return { outputs: { completed: false, error: `Error during channel creation: ${e.message}` } };
+    return { completed: false, error: `Error during channel creation: ${e.message}` };
   }
   if (!res || res.ok !== true) {
     console.error(res);
-    return { outputs: { completed: false, error: `Bad response from channel creation API: ${res}` } };
+    return { completed: false, error: `Bad response from channel creation API: ${res.error}` };
   }
   const channel = res.channel.id;
 
@@ -46,7 +46,7 @@ const CreateIncident: FunctionHandler<any, any> = async (args: any) => {
     });
   } catch (e) {
     console.error(e);
-    return { outputs: { completed: false, error: `Error incident channel message posting: ${e.message}` } };
+    return { completed: false, error: `Error incident channel message posting: ${e.message}` };
   }
   console.log('Incident created!');
   return await {
