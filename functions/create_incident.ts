@@ -5,8 +5,8 @@ import { paramCase } from "https://deno.land/x/case@2.1.1/mod.ts";
 // deno-lint-ignore no-explicit-any
 const CreateIncident: FunctionHandler<any, any> = async ({ inputs, env, token }) => {
   console.log(inputs);
+  // Tweak the channel name to conform to naming requirements.
   const slug = paramCase(inputs.slug);
-  // see https://api.slack.com/methods/conversations.create#naming
   const slackApiUrl = env["SLACK_API_URL"];
   console.log(
     `New incident created: ${slug} | ${inputs.description} | ${inputs.severity}`,
