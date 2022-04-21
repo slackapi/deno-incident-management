@@ -1,6 +1,6 @@
 import type { FunctionHandler } from "deno-slack-sdk/types.ts";
 import { SlackAPI } from "deno-slack-api/mod.ts";
-import { paramCase } from "../deps.ts";
+import { paramCase } from "https://deno.land/x/case@2.1.1/mod.ts";
 
 // deno-lint-ignore no-explicit-any
 const CreateIncident: FunctionHandler<any, any> = async ({ inputs, env, token }) => {
