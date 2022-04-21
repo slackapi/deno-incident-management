@@ -1,19 +1,15 @@
 import type { FunctionHandler } from "deno-slack-sdk/types.ts";
 import { SlackAPI } from "deno-slack-api/mod.ts";
+import { paramCase } from "../deps.ts";
 
 // deno-lint-ignore no-explicit-any
-const CreateIncident: FunctionHandler<any, any> = async (args: any) => {
-  const token: string = args.token;
-// deno-lint-ignore no-explicit-any
-  const inputs: any = args.inputs;
-// deno-lint-ignore no-explicit-any
-  const env: any = args.env;
+const CreateIncident: FunctionHandler<any, any> = async ({ inputs, env, token }) => {
   console.log(inputs);
-  // TODO: maybe validate inputs.slug to make sure it conforms to channel naming requirements?
+  const slug = paramCase(inputs.slug);
   // see https://api.slack.com/methods/conversations.create#naming
   const slackApiUrl = env["SLACK_API_URL"];
   console.log(
-    `New incident created: ${inputs.slug} | ${inputs.description} | ${inputs.severity}`,
+    `New incident created: ${slug} | ${inputs.description} | ${inputs.severity}`,
   );
   const incidentId = crypto.randomUUID();
 
@@ -24,7 +20,7 @@ const CreateIncident: FunctionHandler<any, any> = async (args: any) => {
   console.log('Creating channel...');
   try {
     res = await client.apiCall('conversations.create', {
-      name: inputs.slug,
+      name: slug,
       is_private: false,
     });
   } catch (e) {
@@ -42,7 +38,7 @@ const CreateIncident: FunctionHandler<any, any> = async (args: any) => {
   try {
     await client.apiCall('chat.postMessage', {
       channel,
-      text: `There is an incident: #${incidentId} ${inputs.description}`,
+      text: `There is an incident (ID ${incidentId}): ${inputs.description}`,
     });
   } catch (e) {
     console.error(e);
