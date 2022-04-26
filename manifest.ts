@@ -20,6 +20,10 @@ const CreateIncident = DefineFunction({
         type: Schema.types.string,
         description: "Incident Impact / Severity",
       },
+      creator: {
+        type: Schema.slack.types.user_id,
+        description: "Incident Channel Creator",
+      },
     },
   },
   output_parameters: {
@@ -40,5 +44,5 @@ export default Manifest({
   icon: "assets/icon.png",
   functions: [CreateIncident],
   outgoingDomains: [],
-  botScopes: ["commands", "chat:write", "chat:write.public", "groups:write", "channels:manage"],
+  botScopes: ["commands", "chat:write", "chat:write.public", "groups:write", "channels:manage", "users:read"],
 });
