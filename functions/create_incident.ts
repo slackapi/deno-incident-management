@@ -11,7 +11,7 @@ const CreateIncident: FunctionHandler<any, any> = async ({ inputs, env, token })
   console.log(
     `New incident created: ${slug} | ${inputs.description} | ${inputs.severity}`,
   );
-  const incidentId = crypto.randomUUID();
+  const incidentId = `incd-${new Date().getTime()}`;
 
   // Create a channel first
   const client = SlackAPI(token, { slackApiUrl });
@@ -32,6 +32,18 @@ const CreateIncident: FunctionHandler<any, any> = async ({ inputs, env, token })
     return { completed: false, error: `Bad response from channel creation API: ${res.error}` };
   }
   const channel = res.channel.id;
+
+  // Invite the channel creator to the channel
+  try {
+    res = await client.apiCall('conversations.invite', {
+      channel,
+      users: inputs.creator,
+    });
+    console.log(res);
+  } catch (e) {
+    console.error(e);
+    return { completed: false, error: `Error during channel invitation: ${e.message}` };
+  }
 
   // Send a message to the new channel second
   console.log('Sending message...');
