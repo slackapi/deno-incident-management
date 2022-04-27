@@ -20,7 +20,7 @@ const CreateIncident: FunctionHandler<any, any> = async ({ inputs, env, token })
   console.log('Creating channel...');
   try {
     res = await client.apiCall('conversations.create', {
-      name: slug,
+      name: `${incidentId}-${slug}`,
       is_private: false,
     });
   } catch (e) {
